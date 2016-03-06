@@ -11,25 +11,21 @@ class Try(Monad):
 
     def succeed(self): return False
 
-    def get_error(self): return None
+    def as_either(self): return either((self._get_result(), self._get_error()))
 
-    def get_result(self): return None
+    def get_error(self): return maybe(self._get_error())
 
-    def as_either(self): return either((self.get_result(), self.get_error()))
-
-    def maybe_error(self): return maybe(self.get_error())
-
-    def maybe_result(self): return maybe(self.get_result())
+    def get_result(self): return maybe(self._get_result())
 
     def map(self, mapper):
         if self.failed():
             return self
-        return attempt(lambda: mapper(self.get_result()))
+        return attempt(lambda: mapper(self._get_result()))
 
     def flat_map(self, mapper):
         if self.failed():
             return self
-        return mapper(self.get_result())
+        return mapper(self._get_result())
 
     def fallback(self, tryable):
         if self.failed():
@@ -43,28 +39,28 @@ class Try(Monad):
 
     def handle_error(self, handler):
         if self.failed():
-            return attempt(lambda: handler(self.get_error()))
+            return attempt(lambda: handler(self._get_error()))
         return self
 
     def flat_handle_error(self, handler):
         if self.failed():
-            return handler(self.get_error())
+            return handler(self._get_error())
         return self
 
     def or_else(self, result):
         if self.failed():
             return result
-        return self.get_result()
+        return self._get_result()
 
     def or_throw(self):
         if self.failed():
-            raise self.get_error()
+            raise self._get_error()
         return self
 
-    def get(self):
+    def unpack(self):
         if self.failed():
-            return self.get_error()
-        return self.get_error()
+            return self._get_error()
+        return self._get_result()
 
     @classmethod
     def of(cls, tryable):
@@ -73,6 +69,10 @@ class Try(Monad):
         except BaseException as e:
             return failure(e)
 
+    def _get_error(self): return None
+
+    def _get_result(self): return None
+
 
 class _Success(Try):
     def __init__(self, value):
@@ -80,7 +80,10 @@ class _Success(Try):
 
     def succeed(self): return True
 
-    def get_result(self): return self.value
+    def _get_result(self): return self.value
+
+    def __str__(self):
+        return 'Success ' + str(self.value)
 
 
 class _Failure(Try):
@@ -89,7 +92,10 @@ class _Failure(Try):
 
     def failed(self): return True
 
-    def get_error(self): return self.e
+    def _get_error(self): return self.e
+
+    def __str__(self):
+        return 'Failure ' + str(self.e)
 
 
 def success(value):

@@ -1,4 +1,5 @@
 from f4py.Monad import Monad
+from f4py.exception.NotPresentException import NotPresentException
 
 
 class Maybe(Monad):
@@ -30,20 +31,32 @@ class Maybe(Monad):
             return value
         return self._get()
 
-    def flat_or_else(self, maybe):
+    def or_else_compute(self, producer):
+        if self.is_nothing():
+            return producer()
+        return self._get()
+
+    def if_absent(self, maybe):
         if self.is_nothing():
             return maybe
         return self
 
-    def or_else_compute(self, producer):
+    def compute_if_absent(self, producer):
         if self.is_nothing():
             return Maybe.of(producer())
+        return self
+
+    def flat_compute_if_absent(self, producer):
+        if self.is_nothing():
+            return producer()
         return self
 
     def get(self):
         if self.is_present():
             return self._get()
-        return None
+        raise NotPresentException
+
+    def unpack(self): return self._get()
 
     def _get(self): return None
 
@@ -59,6 +72,9 @@ class _Nothing(Maybe):
 
     def is_nothing(self): return True
 
+    def __str__(self):
+        return 'Nothing'
+
 
 class _Just(Maybe):
     def __init__(self, value):
@@ -67,6 +83,9 @@ class _Just(Maybe):
     def is_present(self): return True
 
     def _get(self): return self.value
+
+    def __str__(self):
+        return 'Just ' + str(self.value)
 
 
 def nothing(): return _Nothing()

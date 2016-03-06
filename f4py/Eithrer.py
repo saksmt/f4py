@@ -23,12 +23,12 @@ class Either(Monad):
         return self.map(left_mapper if self.is_left() else right_mapper)
 
     def flat_map(self, mapper):
-        return mapper(self._get_right() if self.is_left() else self._get_right())
+        return mapper(self._get_left() if self.is_left() else self._get_right())
 
     def flat_bimap(self, left_mapper, right_mapper):
         return self.flat_map(left_mapper if self.is_left() else right_mapper)
 
-    def get(self):
+    def unpack(self):
         if self.is_left():
             return self._get_left()
         return self._get_right()
@@ -66,6 +66,9 @@ class Left(Either):
 
     def _get_left(self): return self.value
 
+    def __str__(self):
+        return 'Left ' + str(self.value)
+
 
 class Right(Either):
 
@@ -75,6 +78,9 @@ class Right(Either):
     def is_right(self): return True
 
     def _get_right(self): return self.value
+
+    def __str__(self):
+        return 'Right ' + str(self.value)
 
 
 def left(value): return Either.left(value)
