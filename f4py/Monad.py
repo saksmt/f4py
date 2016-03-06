@@ -6,4 +6,4 @@ class Monad:
 
     def flat_map(self, mapper): pass
 
-    def get(self): pass
+    def unpack(self): pass
