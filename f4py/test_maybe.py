@@ -124,6 +124,18 @@ class TestMaybe(TestCase):
         with self.assertRaises(NotPresentException):
             self.empty.get()
 
+    def test_peek_empty(self):
+        store = {}
+        result = self.empty.peek(lambda v: store.setdefault('v', v))
+        self.assertNothing(result)
+        self.assertIsNone(store['v'])
+
+    def test_peel_filled(self):
+        store = {}
+        result = self.filled.peek(lambda v: store.setdefault('v', v))
+        self.assertJust(result, self.initial)
+        self.assertEqual(store['v'], self.initial)
+
     def test_of_none(self):
         self.assertNothing(Maybe.of(None))
 

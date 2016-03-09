@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='f4py',
-    version='1.0.0',
+    version='1.1.0',
     packages=['f4py', 'f4py.exception'],
     url='https://github.com/saksmt/f4py.git',
     license='MIT',
