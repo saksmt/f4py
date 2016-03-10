@@ -8,5 +8,16 @@ setup(
     license='MIT',
     author='Kirill Saksin',
     author_email='smt@smt.run',
-    description='Algebraic types, like Maybe (Optional), Either and Try for python3'
+    description='Algebraic types, like Maybe (Optional), Either and Try for python3',
+    keywords=[
+        'haskell',
+        'monad',
+        'fp',
+        'functional',
+        'functional programming',
+        'either',
+        'optional',
+        'maybe',
+        'try'
+    ]
 )

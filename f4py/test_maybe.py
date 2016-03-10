@@ -128,7 +128,7 @@ class TestMaybe(TestCase):
         store = {}
         result = self.empty.peek(lambda v: store.setdefault('v', v))
         self.assertNothing(result)
-        self.assertIsNone(store['v'])
+        self.assertIsNone(store.get('v'))
 
     def test_peel_filled(self):
         store = {}

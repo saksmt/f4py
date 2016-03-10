@@ -57,7 +57,11 @@ r_value = one_or_other.get_right().if_absent(just(5))
 l_value = one_or_other.get_left().or_else_compute(lambda: 10)
 ```
 
-That's it. For more use `Ctrl` + `Space` :)
+That's it. For more see [documentation](./doc) and use `Ctrl` + `Space` :)
+
+## Roadmap
+
+Maybe implement streams
 
 ## License
 

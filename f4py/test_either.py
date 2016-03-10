@@ -81,6 +81,18 @@ class TestEither(TestCase):
     def test_flip_right(self):
         self.assertLeft(self.right.flip(), self.right_value)
 
+    def test_peek_left(self):
+        saved = {}
+        result = self.left.peek(lambda v: saved.setdefault('v', v))
+        self.assertLeft(result, self.left_value)
+        self.assertEqual(saved['v'], self.left_value)
+
+    def test_peek_right(self):
+        saved = {}
+        result = self.right.peek(lambda v: saved.setdefault('v', v))
+        self.assertRight(result, self.right_value)
+        self.assertEqual(saved['v'], self.right_value)
+
     def test_of_left(self):
         pair = (self.left_value, None)
         self.assertLeft(Either.of(pair), self.left_value)
