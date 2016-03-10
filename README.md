@@ -9,6 +9,7 @@ Functional (algebraic) data types for python
  - `f4py.Try`
  - `f4py.Monad`
  - `f4py.exception.NotPresentException`
+ - `f4py.exception.CompositeException`
 
 ## Usage
 
