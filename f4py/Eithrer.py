@@ -33,6 +33,10 @@ class Either(Monad):
             return self._get_left()
         return self._get_right()
 
+    def peek(self, mapper):
+        mapper(self._get_left() if self.is_left() else self._get_right())
+        return self
+
     def flip(self):
         if self.is_left():
             return right(self._get_left())

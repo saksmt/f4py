@@ -1,6 +1,7 @@
 from f4py.Eithrer import either
 from f4py.Maybe import maybe
 from f4py.Monad import Monad
+from f4py.exception.CompositeException import CompositeException
 
 
 class Try(Monad):
@@ -45,6 +46,33 @@ class Try(Monad):
     def flat_handle_error(self, handler):
         if self.failed():
             return handler(self._get_error())
+        return self
+
+    def peek(self, mapper):
+        if self.succeed():
+            mapper(self._get_result())
+        return self
+
+    def on_success(self, action):
+        if self.succeed():
+            action(self._get_result())
+        return self
+
+    def on_success_try(self, action):
+        if self.succeed():
+            attempt(lambda: action(self._get_result()))
+        return self
+
+    def on_failure(self, action):
+        if self.failed():
+            action(self._get_error())
+        return self
+
+    def on_failure_try(self, action):
+        if self.failed():
+            result = attempt(lambda: action(self._get_error()))
+            if result.failed():
+                return failure(CompositeException(self._get_error(), result._get_error()))
         return self
 
     def or_else(self, result):

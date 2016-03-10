@@ -39,3 +39,5 @@ target/
 .python-version
 
 .env
+
+MANIFEST

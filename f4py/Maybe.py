@@ -56,6 +56,11 @@ class Maybe(Monad):
             return self._get()
         raise NotPresentException
 
+    def peek(self, func):
+        if self.is_present():
+            func(self._get())
+        return self
+
     def unpack(self): return self._get()
 
     def _get(self): return None

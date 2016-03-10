@@ -9,6 +9,7 @@ Functional (algebraic) data types for python
  - `f4py.Try`
  - `f4py.Monad`
  - `f4py.exception.NotPresentException`
+ - `f4py.exception.CompositeException`
 
 ## Usage
 
@@ -32,16 +33,18 @@ result = nonable_value\
     .filter(out_something)\
     .if_absent(my_value)\
     .flat_compute_if_absent(my_maybe_producer)\
+    .peek(print)
     .or_else(5)
 
 computed_result = attempt(do_some_work)\
-    .map(convert_to_something)
-    .fallback(do_some_other_work)
-    .handle_error(error_handler)
+    .map(convert_to_something)\
+    .fallback(do_some_other_work)\
+    .on_error(print)\ # non terminable
+    .handle_error(error_handler)\
     .or_else(result)
 
 one_or_other = either(get_tuple())\
-    .map(side_independent_converter)
+    .map(side_independent_converter)\
     .bimap(left_mapper, right_mapper)
 
 any_result = one_or_other.unpack()
@@ -55,7 +58,11 @@ r_value = one_or_other.get_right().if_absent(just(5))
 l_value = one_or_other.get_left().or_else_compute(lambda: 10)
 ```
 
-That's it. For more use `Ctrl` + `Space` :)
+That's it. For more see [documentation](./doc) and use `Ctrl` + `Space` :)
+
+## Roadmap
+
+Maybe implement streams
 
 ## License
 
